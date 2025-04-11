@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: This template deploys resources for copy object pipeline.
+Parameters:
+  SourceBucketName:
+    Type: String
+    Default: "cf-bucket-landing-psg"
+  DestinationBucketName:
+    Type: String
+    Default: "cf-bucket-copy-psg"
+  CodeBucketName:
+    Type: String
+Resources:
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SourceBucketName
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: 's3:ObjectCreated:*'
+            Function: ''
+      #BucketEncryption:
+        #ServerSideEncryptionConfiguration:
+          #- ServerSideEncryptionByDefault:
+              #SSEAlgorithm: 'aws:sse'
+  DestinationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DestinationBucketName
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Environment:
+        Variables:
+          destination_bucket: !Ref DestinationBucketName
+      Code:
+        S3Bucket: ''
+        S3Key: ''
+      Runtime: python3.13
+      Handler: ''
+      Role: ''
+      Timeout: ''
+
+
