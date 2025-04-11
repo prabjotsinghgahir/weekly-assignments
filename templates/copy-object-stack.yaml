@@ -1,41 +1,85 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: This template deploys resources for copy object pipeline.
 Parameters:
-   SourceBucketName:
-     Type: String
-     Default: "cf-bucket-landing-psg"
-   DestinationBucketName:
-     Type: String
-     Default: "cf-bucket-copy-psg"
-   CodeBucketName:
-     Type: String
+  SourceBucketName:
+    Type: String
+    Default: "cf-bucket-landing-psg"
+  DestinationBucketName:
+    Type: String
+    Default: "cf-bucket-copy-psg"
+  CodeBucketName:
+    Type: String
+    Default: "code-bucket-psg"
+  LambdaFunctionHandler:
+    Type: String
+  LambdaFunctionKey:
+    Type: String
+
 Resources:
-   SourceBucket:
-     Type: AWS::S3::Bucket
-     Properties:
-       BucketName: !Ref SourceBucketName
-       NotificationConfiguration:
-         LambdaConfigurations:
-           - Event: 's3:ObjectCreated:*'
-             Function: ''
-       #BucketEncryption:
-         #ServerSideEncryptionConfiguration:
-           #- ServerSideEncryptionByDefault:
-               #SSEAlgorithm: 'aws:sse'
-   DestinationBucket:
-     Type: AWS::S3::Bucket
-     Properties:
-       BucketName: !Ref DestinationBucketName
-   LambdaFunction:
-     Type: AWS::Lambda::Function
-     Properties:
-       Environment:
-         Variables:
-           destination_bucket: !Ref DestinationBucketName
-       Code:
-         S3Bucket: ''
-         S3Key: ''
-       Runtime: python3.13
-       Handler: ''
-       Role: ''
-       Timeout: '
+  SourceBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref SourceBucketName
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: 's3:ObjectCreated:*'
+            Function: !GetAtt LambdaFunction.Arn
+      #BucketEncryption:
+        #ServerSideEncryptionConfiguration:
+          #- ServerSideEncryptionByDefault:
+              #SSEAlgorithm: 'aws:sse'
+  DestinationBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref DestinationBucketName
+
+  LambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Environment:
+        Variables:
+          destination_bucket: !Ref DestinationBucketName
+      Code:
+        S3Bucket: !Ref CodeBucketName
+        S3Key: !Ref LambdaFunctionKey
+      Runtime: python3.13
+      Handler: !Ref LambdaFunctionHandler
+      Role: ''
+      Timeout: 300
+
+  S3Permission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      SourceArn: !Sub "arn:aws:s3:::${SourceBucketName}"
+      FunctionName: !GetAtt LambdaFunction.Arn
+      Action: lambda:InvokeFunction
+      Principal: s3.amazonaws.com
+      SourceAccount: !Sub "${AWS::AccountId}"
+
+  IAMRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "copy-lambda-s3-role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: "lambda-s3-copy-policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                Resource:
+                  - !GetAtt SourceBucket.Arn
+                  - !GetAtt DestinationBucket.Arn
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
