@@ -1,4 +1,4 @@
-AWSTemplateFormatVersion: "2010-09-09"
+AWSTemplateFormatVersion: 2010-09-09
 Description: This template deploys resources for copy object pipeline.
 Parameters:
   SourceBucketName:
@@ -9,11 +9,13 @@ Parameters:
     Default: "cf-bucket-copy-psg"
   CodeBucketName:
     Type: String
-    Default: "code-bucket-psg"
+    Default: "code-bucket-psg1"
   LambdaFunctionHandler:
     Type: String
+    Default: "copy_function.lambda_handler"
   LambdaFunctionKey:
     Type: String
+    Default: "copy_function.zip"
 
 Resources:
   SourceBucket:
@@ -24,10 +26,9 @@ Resources:
         LambdaConfigurations:
           - Event: 's3:ObjectCreated:*'
             Function: !GetAtt LambdaFunction.Arn
-      #BucketEncryption:
-        #ServerSideEncryptionConfiguration:
-          #- ServerSideEncryptionByDefault:
-              #SSEAlgorithm: 'aws:sse'
+    DependsOn:
+      - S3Permission
+
   DestinationBucket:
     Type: AWS::S3::Bucket
     Properties:
@@ -36,6 +37,7 @@ Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
+      FunctionName: "cf-lambda-copy-s3"
       Environment:
         Variables:
           destination_bucket: !Ref DestinationBucketName
@@ -44,7 +46,7 @@ Resources:
         S3Key: !Ref LambdaFunctionKey
       Runtime: python3.13
       Handler: !Ref LambdaFunctionHandler
-      Role: ''
+      Role: !GetAtt IAMRole.Arn
       Timeout: 300
 
   S3Permission:
@@ -55,6 +57,8 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceAccount: !Sub "${AWS::AccountId}"
+    DependsOn:
+      - LambdaFunction
 
   IAMRole:
     Type: AWS::IAM::Role
@@ -76,10 +80,12 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
-                  - 's3:GetObject'
-                  - 's3:PutObject'
+                  - "s3:GetObject"
+                  - "s3:PutObject"
                 Resource:
-                  - !GetAtt SourceBucket.Arn
+                  - !Sub "arn:aws:s3:::${SourceBucketName}/*"
+                  - !Sub "arn:aws:s3:::${SourceBucketName}"
                   - !GetAtt DestinationBucket.Arn
+                  - !Sub "${DestinationBucket.Arn}/*"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
