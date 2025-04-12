@@ -16,6 +16,9 @@ Parameters:
   LambdaFunctionKey:
     Type: String
     Default: "copy_function.zip"
+  LambdaFunctionName:
+    Type: String
+    Default: "cf-lambda-copy-s3"
 
 Resources:
   SourceBucket:
@@ -37,7 +40,7 @@ Resources:
   LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
-      FunctionName: "cf-lambda-copy-s3"
+      FunctionName: !Ref LambdaFunctionName
       Environment:
         Variables:
           destination_bucket: !Ref DestinationBucketName
