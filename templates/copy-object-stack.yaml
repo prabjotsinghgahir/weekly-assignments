@@ -84,8 +84,6 @@ Resources:
                   - "s3:PutObject"
                 Resource:
                   - !Sub "arn:aws:s3:::${SourceBucketName}/*"
-                  - !Sub "arn:aws:s3:::${SourceBucketName}"
-                  - !GetAtt DestinationBucket.Arn
-                  - !Sub "${DestinationBucket.Arn}/*"
+                  - !Sub "arn:aws:s3:::${DestinationBucketName}/*"
       ManagedPolicyArns:
         - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
