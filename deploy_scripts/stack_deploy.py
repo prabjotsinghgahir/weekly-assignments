@@ -21,37 +21,40 @@ class StackCreation:
                 Capabilities=['CAPABILITY_NAMED_IAM'],
                 Parameters=self.parameter
             )
-            print("Creating Stack")
             logging.info("Creating Stack")
             waiter = client.get_waiter('stack_create_complete')
             waiter.wait(
                 StackName=self.stack_name,
                 WaiterConfig={
-                    "Delay": 2,
-                    "MaxAttempts": 2
+                    "Delay": 60,
+                    "MaxAttempts": 200
                 }
             )
-            print("Stack Created")
             logging.info("Stack Created")
         except WaiterError:
             pass
         except client.exceptions.AlreadyExistsException:
-            print("Updating stack")
             logging.info("Updating stack")
             try:
                 client.update_stack(
                     StackName=self.stack_name,
                     TemplateBody=self.reading,
-                    Capabilities=['CAPABILITY_IAM'],
+                    Capabilities=['CAPABILITY_NAMED_IAM'],
                     Parameters=self.parameter
                 )
                 waiter = client.get_waiter('stack_update_complete')
-                waiter.wait(StackName=self.stack_name)
-            #except WaiterError:
-                #pass
+                waiter.wait(
+                    StackName=self.stack_name,
+                    WaiterConfig={
+                        "Delay": 60,
+                        "MaxAttempts": 200
+                    }
+                )
+            except WaiterError:
+                pass
             except client.exceptions.ClientError as err:
-                print("Printing Error:  ", err)
-            print("stack Updated")
+                logging.warning(f"{err}")
+            logging.info("Stack updated")
 
     def stack_status(self):
         try:
@@ -60,6 +63,11 @@ class StackCreation:
             )
             res = response['Stacks'][0]['StackStatus']
             print(res)
+            while res == "CREATE_IN_PROGRESS" or res == "ROLLBACK_IN_PROGRESS":
+                response = client.describe_stacks(
+                    StackName=self.stack_name
+                )
+                res = response['Stacks'][0]['StackStatus']
         except ValidationError:
             raise Exception("Stack is not present")
         if res == 'ROLLBACK_COMPLETE':
@@ -75,6 +83,6 @@ class StackCreation:
             client.delete_stack(
                 StackName=self.stack_name
             )
-            print("Delete Complete")
+            logging.info("Delete Complete")
         else:
-            print("Template is created successfully")
+            logging.info("Template is created or updated successfully")
