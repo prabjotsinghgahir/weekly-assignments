@@ -63,3 +63,4 @@ jobs:
           echo "Some bucket: $BUCKET"
           zip -r python.zip .
           ls
+          aws s3 cp --no-progress python.zip "s3://$BUCKET"
