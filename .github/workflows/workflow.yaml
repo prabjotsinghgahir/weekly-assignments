@@ -38,3 +38,4 @@ jobs:
           mkdir python
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
+          cd python
