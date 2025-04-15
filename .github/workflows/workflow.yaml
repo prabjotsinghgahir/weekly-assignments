@@ -26,5 +26,5 @@ jobs:
         shell: python
         run: |
           import os
-          print(os.environ['PATH'])
+          print(f"Printing Path: {os.environ['PATH']}")
 
