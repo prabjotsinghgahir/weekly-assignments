@@ -38,7 +38,7 @@ jobs:
         run: |
           pip3 --version
           python3 --version
-          mkdir python
+          mkdir new-folder/python
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
           cd ./deploy_scripts
@@ -52,4 +52,8 @@ jobs:
         working-directory: python
         run: |
           pip3 install boto3 -t.
+          ls
+      - name: zipping
+        working-directory: new-folder
+        run: |
           ls
