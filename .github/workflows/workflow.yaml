@@ -32,4 +32,4 @@ jobs:
           print(f"Printing Path: {os.environ['PATH']}")
 
       - name: Running shell script
-        run: apk add zip
+        run: python --version
