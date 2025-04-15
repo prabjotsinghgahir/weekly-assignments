@@ -39,3 +39,4 @@ jobs:
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
           cd python
+          echo "Runner Workspace: $RUNNER_WORKSPACE"
