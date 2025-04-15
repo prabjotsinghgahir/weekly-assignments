@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 #source ./. env
 
+echo "$1"
+
 echo "Running script to zip and upload lambda"
 for f in lambdas/*;do
   echo "${f}"

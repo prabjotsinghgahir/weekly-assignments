@@ -73,7 +73,7 @@ jobs:
           aws s3 cp --no-progress python.zip "s3://$BUCKET"
       - name: Zipping lambda
         run: |
-          sh ./upload.sh
+          bash ./upload.sh $BUCKET
           ls
       - name: Run cf deploy
         run: python3 main.py
