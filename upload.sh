@@ -15,11 +15,8 @@ done
 
 mkdir python
 
-cd python
+pip3 install requests --target "python"
 
-pip3 install requests -t.
-
-cd /
 zip -r python.zip .
 
 aws s3 cp --no-progress python.zip "s3://${bucket}"
