@@ -57,5 +57,5 @@ jobs:
       - name: zipping
         working-directory: new-folder
         run: |
-          ls
           zip -r python.zip .
+          ls
