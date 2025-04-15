@@ -58,3 +58,4 @@ jobs:
         working-directory: new-folder
         run: |
           ls
+          zip -r python.zip .
