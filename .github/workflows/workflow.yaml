@@ -8,6 +8,9 @@ on:
     branches:
       - "main"
 
+permissions:
+  contents: read
+
 jobs:
   s3-upload:
     # The type of runner that the job will run on
