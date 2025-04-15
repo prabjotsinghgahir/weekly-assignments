@@ -12,7 +12,8 @@ on:
   #contents: read
 
 env:
-  BUCKET: "some-bucket"
+  BUCKET: "code-bucket-psg1"
+  REGION: "ap-south-1"
 
 jobs:
   s3-upload:
@@ -55,8 +56,14 @@ jobs:
       - name: python one
         working-directory: new-folder/python
         run: |
-          pip3 install boto3 -t.
+          pip3 install requests -t.
           ls
+      - name: Configure AWS Cred
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: $REGION
       - name: zipping
         working-directory: new-folder
         run: |
