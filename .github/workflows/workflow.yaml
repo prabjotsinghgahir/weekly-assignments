@@ -13,7 +13,7 @@ on:
 
 env:
   BUCKET: "cf-code-bucket-psg"
-  REGION: ap-south-1
+  REGION: "ap-south-1"
 
 jobs:
   s3-upload:
@@ -35,7 +35,7 @@ jobs:
           aws-region: ap-south-1
 
       - name: Creating S3 Bucket
-        run: aws s3api create-bucket --bucket ${BUCKET} --region ${REGION}
+        run: aws s3api create-bucket --bucket ${BUCKET} --region ${REGION} --create-bucket-configuration LocationConstraint=$REGION
 
       - name: Zipping lambda
         run: |
