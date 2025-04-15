@@ -26,7 +26,6 @@ jobs:
         shell: bash
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - continue-on-error: true
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -38,6 +37,7 @@ jobs:
           aws-region: ap-south-1
 
       - name: Creating S3 Bucket
+        continue-on-error: true
         run: aws s3api create-bucket --bucket ${BUCKET} --region ${REGION} --create-bucket-configuration LocationConstraint=$REGION
 
       #- name: Zipping lambda
