@@ -24,5 +24,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
+          curdir = $(pwd)
+          echo ${curdir}
           echo Add other actions to build,
-          echo print cwd: "${pwd}"
+          echo print cwd: "$(pwd)"
