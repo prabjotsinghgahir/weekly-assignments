@@ -45,4 +45,9 @@ jobs:
           echo "Runner Workspace: $RUNNER_WORKSPACE"
       - name: another
         working-directory: ./deploy_scripts
-        run: ls
+        run: |
+          ls
+          echo "Runner Workspace: $RUNNER_WORKSPACE"
+      - name: python one
+        working-directory: python
+        run: echo "Runner Workspace - $RUNNER_WORKSPACE"
