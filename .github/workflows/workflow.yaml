@@ -18,7 +18,7 @@ env:
   REGION: "ap-south-1"
 
 jobs:
-  s3-upload:
+  s3-create-code-bucket:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     defaults:
@@ -26,6 +26,7 @@ jobs:
         shell: bash
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - continue-on-error: true
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
@@ -39,10 +40,32 @@ jobs:
       - name: Creating S3 Bucket
         run: aws s3api create-bucket --bucket ${BUCKET} --region ${REGION} --create-bucket-configuration LocationConstraint=$REGION
 
+      #- name: Zipping lambda
+        #run: |
+          #bash ./upload.sh $BUCKET
+          #ls
+
+      #- name: Run cf deploy
+        #run: python3 main.py
+
+  upload-files:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
       - name: Zipping lambda
         run: |
           bash ./upload.sh $BUCKET
           ls
 
+  create_update_stack:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
       - name: Run cf deploy
         run: python3 main.py
