@@ -11,6 +11,8 @@ on:
 #permissions:
   #contents: read
 
+workflow_dispatch:
+
 env:
   BUCKET: "cf-code-bucket-psg"
   REGION: "ap-south-1"
