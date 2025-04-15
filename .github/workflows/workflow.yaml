@@ -36,3 +36,4 @@ jobs:
           pip --version
           python --version
           mkdir python
+          sh ./upload.sh
