@@ -29,6 +29,6 @@ jobs:
           print(f"Printing Path: {os.environ['PATH']}")
 
       - name: Running shell script
+        shell: bash
         run: |
           apk add zip
-
