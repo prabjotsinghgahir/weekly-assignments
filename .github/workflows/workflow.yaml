@@ -25,4 +25,4 @@ jobs:
       - name: Run a multi-line script
         run: |
           echo Add other actions to build,
-          echo print cwd: ${pwd}
+          echo print cwd: "${pwd}"
