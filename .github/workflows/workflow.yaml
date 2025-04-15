@@ -11,7 +11,7 @@ on:
 #permissions:
   #contents: read
 
-workflow_dispatch:
+#workflow_dispatch:
 
 env:
   BUCKET: "cf-code-bucket-psg"
