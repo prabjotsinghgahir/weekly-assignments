@@ -8,8 +8,11 @@ on:
     branches:
       - "main"
 
-permissions:
-  contents: read
+#permissions:
+  #contents: read
+
+env:
+  BUCKET: "some-bucket"
 
 jobs:
   s3-upload:
@@ -57,5 +60,6 @@ jobs:
       - name: zipping
         working-directory: new-folder
         run: |
+          echo "Some bucket: $BUCKET"
           zip -r python.zip .
           ls
