@@ -6,7 +6,7 @@ file_zip = 'copy_function.py'
 lambda_function_name = "cf-lambda-copy-s3"
 lambda_code_bucket = os.getenv("BUCKET")
 stack_name = 'assignment1'
-source_bucket_name = "cf-bucket-landing-psg"
+source_bucket_name = "cf-cf-bucket-landing-psg"
 destination_bucket_name = "cf-bucket-copy-psg"
 region = 'ap-south-1'
 
