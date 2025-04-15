@@ -38,5 +38,5 @@ jobs:
           mkdir python
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
-          cd "$RUNNER_WORKSPACE/python"
+          cd "$RUNNER_WORKSPACE/deploy_scripts"
           echo "Runner Workspace: $RUNNER_WORKSPACE"
