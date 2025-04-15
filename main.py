@@ -1,9 +1,10 @@
+import os
 from deploy_scripts import stack_deploy
 
 template_name = 'templates/copy-object-stack.yaml'
 file_zip = 'copy_function.py'
 lambda_function_name = "cf-lambda-copy-s3"
-lambda_code_bucket = 'code-bucket-psg1'
+lambda_code_bucket = os.getenv("BUCKET")
 stack_name = 'assignment1'
 source_bucket_name = "cf-bucket-landing-psg"
 destination_bucket_name = "cf-bucket-copy-psg"

@@ -12,3 +12,14 @@ for f in lambdas/*;do
   #echo "$(cut -f 1 -d '.').zip"
   aws s3 cp --no-progress "${zipfile}" "s3://${bucket}"
 done
+
+mkdir python
+
+cd python
+
+pip3 install requests -t.
+
+cd /
+zip -r python.zip .
+
+aws s3 cp --no-progress python.zip "s3://${bucket}"

@@ -12,8 +12,8 @@ on:
   #contents: read
 
 env:
-  BUCKET: "code-bucket-psg1"
-  REGION: "ap-south-1"
+  BUCKET: "cf-code-bucket-psg"
+  REGION: ap-south-1
 
 jobs:
   s3-upload:
@@ -27,53 +27,20 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Creating S3 Bucket
+        run: aws s3api create-bucket --bucket ${BUCKET} --region ${REGION}
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
-        shell: python
-        run: |
-          import os
-          print(f"Printingg Path: {os.environ['PATH']}")
-
-      - name: Running shell script
-        run: |
-          pip3 --version
-          python3 --version
-          mkdir new-folder
-          ls
-          echo "Runner Workspace: $RUNNER_WORKSPACE"
-          cd ./deploy_scripts
-          echo "Runner Workspace: $RUNNER_WORKSPACE"
-      - name: another
-        working-directory: ./new-folder
-        run: |
-          mkdir python
-          ls
-          echo "Runner Workspace: $RUNNER_WORKSPACE"
-      - name: python one
-        working-directory: new-folder/python
-        run: |
-          pip3 install requests -t.
-          ls
       - name: Configure AWS Cred
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
-      - name: zipping
-        working-directory: new-folder
-        run: |
-          echo "Some bucket: $BUCKET"
-          zip -r python.zip .
-          ls
-          aws s3 cp --no-progress python.zip "s3://$BUCKET"
+          aws-region: $REGION
+
       - name: Zipping lambda
         run: |
           bash ./upload.sh $BUCKET
           ls
+
       - name: Run cf deploy
         run: python3 main.py
