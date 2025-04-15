@@ -44,13 +44,13 @@ jobs:
           cd ./deploy_scripts
           echo "Runner Workspace: $RUNNER_WORKSPACE"
       - name: another
-        working-directory: new-folder
+        working-directory: ./new-folder
         run: |
           mkdir python
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
       - name: python one
-        working-directory: python
+        working-directory: new-folder/python
         run: |
           pip3 install boto3 -t.
           ls
