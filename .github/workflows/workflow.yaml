@@ -25,7 +25,7 @@ jobs:
       - name: Run a multi-line script
         shell: bash
         run: |
-          curdir = $(pwd)
+          curdir = $PATH
           echo ${curdir}
           echo Add other actions to build,
-          echo print cwd: "$(pwd)"
+          echo print cwd: $PATH
