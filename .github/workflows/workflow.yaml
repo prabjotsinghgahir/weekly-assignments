@@ -38,14 +38,15 @@ jobs:
         run: |
           pip3 --version
           python3 --version
-          mkdir new-folder/python
+          mkdir new-folder
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
           cd ./deploy_scripts
           echo "Runner Workspace: $RUNNER_WORKSPACE"
       - name: another
-        working-directory: ./deploy_scripts
+        working-directory: new-folder
         run: |
+          mkdir python
           ls
           echo "Runner Workspace: $RUNNER_WORKSPACE"
       - name: python one
