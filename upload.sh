@@ -6,3 +6,4 @@ for f in lambdas/*;do
   echo "${f}"
   zipfile = $(echo ${f} | cut -f 1 -d '.').zip
   zip -j "${zipfile}" "${f}"
+done
