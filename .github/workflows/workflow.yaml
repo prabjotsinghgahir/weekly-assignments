@@ -43,4 +43,4 @@ jobs:
           echo "Runner Workspace: $RUNNER_WORKSPACE"
           cd ./deploy_scripts
           echo "Runner Workspace: $RUNNER_WORKSPACE"
-          ls deploy_scripts
+          ls ./deploy_scripts
