@@ -35,3 +35,4 @@ jobs:
         run: |
           pip --version
           python --version
+          mkdir python
