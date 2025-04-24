@@ -1,5 +1,7 @@
 name: Deployment of assignment1
 
+run-name: Deploying resources for assignment 1
+
 on:
   push:
     branches:
