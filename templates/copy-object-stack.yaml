@@ -29,8 +29,6 @@ Resources:
         LambdaConfigurations:
           - Event: 's3:ObjectCreated:*'
             Function: !GetAtt LambdaFunction.Arn
-    DependsOn:
-      - S3Permission
 
   DestinationBucket:
     Type: AWS::S3::Bucket
@@ -60,8 +58,6 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: s3.amazonaws.com
       SourceAccount: !Sub "${AWS::AccountId}"
-    DependsOn:
-      - LambdaFunction
 
   IAMRole:
     Type: AWS::IAM::Role

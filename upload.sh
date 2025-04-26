@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#source ./. env
 
 bucket=$1
 echo "${bucket}"
@@ -12,11 +11,3 @@ for f in lambdas/*;do
   #echo "$(cut -f 1 -d '.').zip"
   aws s3 cp --no-progress "${zipfile}" "s3://${bucket}"
 done
-
-mkdir python
-
-pip3 install requests --target "python"
-
-zip -r python.zip .
-
-aws s3 cp --no-progress python.zip "s3://${bucket}"
